@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora 1.0</title>
+    <link rel="stylesheet" href="proyecto.css">
+</head>
+<body>
+    <div class="calculator">
+        <div class="screen">
+            <input type="text" id="screen" readonly>
+            <button id="historial-btn">H</button>
+        </div>
+        <div class="buttons">
+            <button class="btn" onclick="clearEntry()">CE</button>
+            <button class="btn" onclick="clearScreen()">C</button>
+            <button class="btn" onclick="deleteLastDigit()">⌫</button>
+            <button class="btn" onclick="deleteLastOperator()">⌦</button>
+            <button class="btn" onclick="appendOperator('+')">+</button>
+            <button class="btn" onclick="appendNumber('7')">7</button>
+            <button class="btn" onclick="appendNumber('8')">8</button>
+            <button class="btn" onclick="appendNumber('9')">9</button>
+            <button class="btn" onclick="appendOperator('-')">-</button>
+            <button class="btn" onclick="appendNumber('4')">4</button>
+            <button class="btn" onclick="appendNumber('5')">5</button>
+            <button class="btn" onclick="appendNumber('6')">6</button>
+            <button class="btn" onclick="appendOperator('*')">*</button>
+            <button class="btn" onclick="appendNumber('1')">1</button>
+            <button class="btn" onclick="appendNumber('2')">2</button>
+            <button class="btn" onclick="appendNumber('3')">3</button>
+            <button class="btn" onclick="calculateResult()">=</button>
+            <button class="btn" id="cero" onclick="appendNumber('0')">0</button>
+            <button class="btn" onclick="appendNumber('.')">.</button>
+            <button class="btn" onclick="appendOperator('/')">/</button>
+        </div>
+        <div class="history oculto">
+            <button id="return-btn">&lt;</button>
+            <h2>Historial</h2>
+            <ul id="history"></ul>
+        </div>
+    </div>
+
+    <script>
+        let screen = document.getElementById("screen");
+        let history = document.getElementById("history");
+        let historyDiv = document.querySelector(".history");
+        let historialBtn = document.getElementById("historial-btn");
+        let returnBtn = document.getElementById("return-btn");
+
+        historialBtn.addEventListener("click", () => {
+            historyDiv.classList.remove("oculto");
+        });
+
+        returnBtn.addEventListener("click", () => {
+            historyDiv.classList.add("oculto");
+        });
+
+        function appendNumber(num) {
+            screen.value += num;
+        }
+
+        function appendOperator(op) {
+            if (/[-+*/]$/.test(screen.value)) return;
+            screen.value += op;
+        }
+
+        function clearEntry() {
+            screen.value = "";
+        }
+
+        function clearScreen() {
+            screen.value = "";
+            history.innerHTML = "";
+        }
+
+        function deleteLastDigit() {
+            screen.value = screen.value.slice(0, -1);
+        }
+
+        function deleteLastOperator() {
+            screen.value = screen.value.replace(/[-+*/][^+-/*]*$/, '');
+        }
+
+        function calculateResult() {
+            try {
+                if (/\/0(?!\d)/.test(screen.value)) {
+                    throw new Error("Error: División por cero");
+                }
+                let result = Function(`'use strict'; return (${screen.value})`)();
+                screen.value = result.toFixed(2);
+                history.innerHTML += `<li>${screen.value}</li>`;
+            } catch (error) {
+                screen.value = "Error";
+            }
+        }
+    </script>
+</body>
+</html>
