@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora 2.0 con Memoria</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #232323;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .calculadora {
+            background-color: #48BFFF;
+            color: white;
+            width: 350px;
+            max-width: 100%;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: .5rem;
+            box-shadow: 0 0 20px #48BFFF;
+        }
+
+        .pantalla {
+            grid-column: 1 / 5;
+            background-color: #090c31;
+            padding: 1.5rem;
+            font-size: 2rem;
+            text-align: right;
+            border-radius: .5rem;
+            margin-bottom: 1rem;
+            font-family: monospace;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .btn {
+            background-color: #006DA7;
+            color: white;
+            border: 0;
+            padding: 1.5rem .5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: .5rem;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #004F78;
+            font-weight: bold;
+        }
+        
+        .memory-btn {
+            background-color: #00529B;
+        }
+
+        .memory-btn:hover {
+            background-color: #003F7A;
+        }
+        
+        .clear-btn {
+            background-color: #FF8C00; /* Color naranja para botones de borrado */
+        }
+
+        .clear-btn:hover {
+            background-color: #cc7000;
+        }
+
+        #igual {
+            grid-column: 3 / 5;
+            background-color: #e65766;
+        }
+
+        #igual:hover {
+            background-color: #e6394a;
+        }
+
+        .history {
+            background-color: #fff;
+            color: black;
+            width: 200px;
+            padding: 10px;
+            border-radius: 1rem;
+            box-shadow: 0 0 10px #48BFFF;
+            font-size: 0.9em;
+            height: auto;
+        }
+
+        .history h4 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .history ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .history li {
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="calculadora">
+            <input type="text" class="pantalla" id="screen" readonly>
+            
+            <button class="btn memory-btn" onclick="memoryClear()">MC</button>
+            <button class="btn memory-btn" onclick="memoryRecall()">MR</button>
+            <button class="btn memory-btn" onclick="memoryAdd()">M+</button>
+            <button class="btn memory-btn" onclick="memorySubtract()">M-</button>
+            
+            <button class="btn clear-btn" onclick="clearAll()">CA</button>
+            <button class="btn clear-btn" onclick="clearCurrent()">C</button>
+            <button class="btn" onclick="appendPercentage()">%</button>
+            <button class="btn" onclick="appendOperator('/')">/</button>
+            
+            <button class="btn" onclick="appendNumber('7')">7</button>
+            <button class="btn" onclick="appendNumber('8')">8</button>
+            <button class="btn" onclick="appendNumber('9')">9</button>
+            <button class="btn" onclick="appendOperator('*')">*</button>
+            
+            <button class="btn" onclick="appendNumber('4')">4</button>
+            <button class="btn" onclick="appendNumber('5')">5</button>
+            <button class="btn" onclick="appendNumber('6')">6</button>
+            <button class="btn" onclick="appendOperator('-')">-</button>
+            
+            <button class="btn" onclick="appendNumber('1')">1</button>
+            <button class="btn" onclick="appendNumber('2')">2</button>
+            <button class="btn" onclick="appendNumber('3')">3</button>
+            <button class="btn" onclick="appendOperator('+')">+</button>
+            
+            <button class="btn" onclick="appendNumber('.')">.</button>
+            <button class="btn" onclick="appendNumber('0')">0</button>
+            <button class="btn" id="igual" onclick="calculateResult()">=</button>
+        </div>
+        <div class="history">
+            <h4>Historial</h4>
+            <ul id="history"></ul>
+        </div>
+    </div>
+
+    <script>
+        const screen = document.getElementById("screen");
+        const history = document.getElementById("history");
+        let newOperation = false;
+        let memory = 0;
+
+        // --- Funciones de Memoria ---
+        function memoryAdd() {
+            const currentValue = parseFloat(screen.value);
+            if (!isNaN(currentValue)) {
+                memory += currentValue;
+            }
+        }
+        function memorySubtract() {
+            const currentValue = parseFloat(screen.value);
+            if (!isNaN(currentValue)) {
+                memory -= currentValue;
+            }
+        }
+        function memoryRecall() {
+            screen.value = memory;
+        }
+        function memoryClear() {
+            memory = 0;
+        }
+
+        // --- Funciones de la Calculadora ---
+
+        /**
+         * CA: Borra todo (pantalla e historial).
+         */
+        function clearAll() {
+            screen.value = "";
+            history.innerHTML = ""; 
+        }
+
+        /**
+         * C: Borra la operación actual en pantalla.
+         */
+        function clearCurrent() {
+            screen.value = "";
+        }
+
+        function appendNumber(num) {
+            if (newOperation) {
+                screen.value = "";
+                newOperation = false;
+            }
+            if (num === '.' && screen.value.includes('.')) return;
+            screen.value += num;
+        }
+    
+        function appendOperator(op) {
+            if (screen.value === "" || /[-+*/]$/.test(screen.value)) return;
+            screen.value += op;
+            newOperation = false;
+        }
+    
+        function appendPercentage() {
+            if (screen.value !== "") {
+                try {
+                    let result = eval(screen.value) / 100;
+                    screen.value = result;
+                } catch (error) {
+                    screen.value = "Error";
+                }
+            }
+        }
+    
+        function calculateResult() {
+            if (screen.value === "" || /[-+*/]$/.test(screen.value)) return;
+            try {
+                if (/\/0/.test(screen.value)) {
+                    throw new Error("División por cero");
+                }
+                let expression = screen.value;
+                let result = eval(expression);
+                result = parseFloat(result.toFixed(10)); 
+                screen.value = result;
+                history.innerHTML += `<li>${expression} = ${result}</li>`;
+                newOperation = true;
+            } catch (error) {
+                screen.value = error.message === "División por cero" ? "Error: /0" : "Error";
+            }
+        }
+    </script>
+</body>
+</html>
