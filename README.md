@@ -70,5 +70,5 @@ Se implementó una solución personalizada usando **Matemáticas Vectoriales**:
 Este proyecto es de uso académico y personal.
 
 ---
-**Desarrollado por [Tu Nombre]**
+**Desarrollado por Joshua Castro Ramirez**
 Estudiante de Ingeniería en Informática 💻
