@@ -34,20 +34,6 @@
 
 ---
 
-## 📸 Capturas de Pantalla
-
-| Login / Registro | Home Dueño | Home Paseador |
-|:---:|:---:|:---:|
-| <img src="ruta/a/tu/imagen1.png" width="200"/> | <img src="ruta/a/tu/imagen2.png" width="200"/> | <img src="ruta/a/tu/imagen3.png" width="200"/> |
-
-| Mapa en Vivo (GPS) | Chat Interactivo | Historial |
-|:---:|:---:|:---:|
-| <img src="ruta/a/tu/imagen4.png" width="200"/> | <img src="ruta/a/tu/imagen5.png" width="200"/> | <img src="ruta/a/tu/imagen6.png" width="200"/> |
-
-> *Nota: Las imágenes son demostrativas de la interfaz construida con Jetpack Compose.*
-
----
-
 ## 🚀 Instalación y Uso
 
 1.  **Clonar el repositorio:**
